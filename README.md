@@ -177,3 +177,6 @@ The online version of Step-Video-T2V is available on [跃问视频](https://yuew
 - We would like to express our sincere thanks to the [xDiT](https://github.com/xdit-project/xDiT) team for their invaluable support and parallelization strategy. 
 - Our code will be integrated into the official repository of [Huggingface/Diffusers](https://github.com/huggingface/diffusers).
 - We thank the [FastVideo](https://github.com/hao-ai-lab/FastVideo) team for their continued collaboration and look forward to launching inference acceleration solutions together in the near future.
+
+
+# Updated at now
