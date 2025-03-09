@@ -13,6 +13,18 @@ class Attention(nn.Module):
         super().__init__()
     
     def attn_processor(self, attn_type):
+        """
+        Returns the appropriate attention function based on the specified attention type.
+
+        Args:
+            attn_type (str): The type of attention to use. Supported types are 'torch' and 'parallel'.
+
+        Returns:
+            function: The corresponding attention function.
+
+        Raises:
+            Exception: If the specified attention type is not supported.
+        """
         if attn_type == 'torch':
             return self.torch_attn_func
         elif attn_type == 'parallel':
@@ -30,7 +42,20 @@ class Attention(nn.Module):
         drop_rate=0.0,
         **kwargs
     ):
+        """
+        Computes attention using PyTorch's scaled dot-product attention.
 
+        Args:
+            q (torch.Tensor): Query tensor of shape (batch_size, seq_len, num_heads, head_dim).
+            k (torch.Tensor): Key tensor of shape (batch_size, seq_len, num_heads, head_dim).
+            v (torch.Tensor): Value tensor of shape (batch_size, seq_len, num_heads, head_dim).
+            attn_mask (torch.Tensor, optional): Attention mask tensor. Defaults to None.
+            causal (bool, optional): Whether to apply causal masking. Defaults to False.
+            drop_rate (float, optional): Dropout rate. Defaults to 0.0.
+
+        Returns:
+            torch.Tensor: The output tensor after applying attention.
+        """
         if attn_mask is not None and attn_mask.dtype != torch.bool:
             attn_mask = attn_mask.to(q.dtype)
             
@@ -53,10 +78,24 @@ class Attention(nn.Module):
         causal=False,
         **kwargs
     ):
-        assert xFuserLongContextAttention is not None; 'to use sequence parallel attention, xFuserLongContextAttention should be imported...'
+        """
+        Computes attention using a parallel attention mechanism.
+
+        Args:
+            q (torch.Tensor): Query tensor of shape (batch_size, seq_len, num_heads, head_dim).
+            k (torch.Tensor): Key tensor of shape (batch_size, seq_len, num_heads, head_dim).
+            v (torch.Tensor): Value tensor of shape (batch_size, seq_len, num_heads, head_dim).
+            causal (bool, optional): Whether to apply causal masking. Defaults to False.
+
+        Returns:
+            torch.Tensor: The output tensor after applying parallel attention.
+
+        Raises:
+            AssertionError: If xFuserLongContextAttention is not imported.
+        """
+        assert xFuserLongContextAttention is not None, 'to use sequence parallel attention, xFuserLongContextAttention should be imported...'
         hybrid_seq_parallel_attn = xFuserLongContextAttention()
         x = hybrid_seq_parallel_attn(
-            None, q,k,v, causal=causal
+            None, q, k, v, causal=causal
         )
         return x
-
