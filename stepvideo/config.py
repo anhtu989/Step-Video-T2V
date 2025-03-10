@@ -181,3 +181,9 @@ def add_parallel_args(parser: argparse.ArgumentParser):
         help="Tensor parallel degree.",
     )
     return parser
+
+
+
+def update_feature():
+    """添加新功能。"""
+    print('新功能已添加')
